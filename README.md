@@ -58,14 +58,22 @@ Or use npx to call the local binary, or install Allure globally per your OS.
 
 ## Common commands
 
-The repository includes some npm scripts in `package.json`. Important ones:
+The repository includes npm scripts in `package.json`. **Note:** Some scripts reference project names that don't exist in `playwright.config.ts`:
 
-- `npm run ui` — intended to run UI tests. Note: the Playwright config in this repo contains projects named `chromium`, `firefox`, and `api`. There is a script referencing `--project=ui` in `package.json` which does not match a `ui` project in `playwright.config.ts`. Use the examples below for reliable commands.
-- `npm run api` — runs tests filtered with `@api` tag.
-- `npm run debug` — runs tests with a `debug` project (if configured).
-- `npm run lh` — Lighthouse invocation (if configured).
+- ❌ `npm run ui` — references `--project=ui`, but no `ui` project exists in config
+- ❌ `npm run uim` — references `--project=ui`, but no `ui` project exists in config
+- ❌ `npm run debug` — references `--project=debug`, but no `debug` project exists in config
+- ✅ `npm run api` — runs tests filtered with `@api` tag (works correctly)
+- ✅ `npm run ft` — runs tests filtered with `@ft` tag (works correctly)
+- ✅ `npm run staging` — runs tests with staging environment and `@ft` tag (works correctly)
+- ✅ `npm run lh` — Lighthouse invocation (if configured)
 
-Because some scripts reference project names that don't exist in `playwright.config.ts`, prefer running `npx playwright test` directly or update scripts to match config.
+**Available projects in `playwright.config.ts`:**
+- `chromium` — runs UI tests tagged with `@ui` on Chromium
+- `firefox` — runs UI tests tagged with `@ui` on Firefox
+- `api` — runs API tests tagged with `@api`
+
+For reliable test execution, use the examples in the "Running tests (examples)" section below or update the npm scripts to match the actual project names.
 
 ## Running tests (examples)
 
@@ -140,7 +148,11 @@ export default {
   - `testDir` is `./tests`
   - Reporters: `html` and `allure-playwright`
   - Projects defined: `api`, `chromium`, `firefox` (each uses grep to filter tests)
-  - Retries and timeouts configured in the config file
+  - `api` project: filters tests with `@api` tag, uses API base URL
+  - `chromium` project: filters tests with `@ui` tag, runs on Chromium browser
+  - `firefox` project: filters tests with `@ui` tag, runs on Firefox browser
+  - Retries: 1 (configured in config file)
+  - Timeouts: 2 minutes per test, 3 hours global timeout
 
 If you need to target a custom environment, update the test runner or add an env loader (for example, via `cross-env` or a `.env` file) and update `baseURL` accordingly.
 
@@ -162,15 +174,15 @@ Example important files:
 
 ## Troubleshooting
 
-- If Playwright can't find a project when you run `npm run ui`, check `playwright.config.ts` for defined `projects` and update the script to match (e.g., `--project=chromium`).
-- If browsers are missing, run:
+- **Script errors:** If you get "Project 'ui' not found" when running `npm run ui` or `npm run uim`, use `npx playwright test --project=chromium` instead. The `ui` and `debug` projects don't exist in the config.
+- **Browsers missing:** If browsers are missing, run:
 
 ```powershell
 npx playwright install
 ```
 
-- If Allure commands fail, ensure `allure-commandline` is installed or call via `npx`.
-- If tests are flaky, check `playwright.config.ts` for `retries`, `trace`, and `screenshot` settings.
+- **Allure commands fail:** Ensure `allure-commandline` is installed or call via `npx`.
+- **Flaky tests:** Check `playwright.config.ts` for `retries`, `trace`, and `screenshot` settings. Retries are set to 1, and traces are retained on failure.
 
 ## Contributing
 
@@ -180,9 +192,3 @@ npx playwright install
 ## Contact
 
 For questions about this repository, reach out to the repository owner or maintainer.
-
----
-
-Notes:
-- `package.json` contains some scripts that reference project names (like `ui` or `debug`) which are not present in `playwright.config.ts` at the moment. Consider updating `package.json` scripts to use `--project=chromium` or create corresponding projects in the Playwright config.
-- Example reliable run commands are shown in the "Running tests (examples)" section.
