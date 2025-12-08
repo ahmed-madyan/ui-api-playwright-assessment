@@ -15,28 +15,28 @@ const requestHeaders = {
 };
 //==========================Requests===========================
 //---------------------------Get 200---------------------------
-async function getUsers(request:any) {
+async function getUsers(request: any) {
     // const response = request.get(baseUrl+usersEndpoint);
     const response = request.get(usersEndpoint);
     return response;
 }
 //-----------------------Get with param 200--------------------
-async function getUser2(request:any) {
+async function getUser2(request: any) {
     // const response = await request.get(baseUrl+usersEndpoint,{
     //     params: userParam
     // });
-    const response = await request.get(usersEndpoint,{
+    const response = await request.get(usersEndpoint, {
         params: userParam
     });
     return response;
 }
 //--------------------------post 201---------------------------
-async function createUser(request:any) {
+async function createUser(request: any) {
     // const response = await request.post(baseUrl+usersEndpoint,{
     //     // Headers: requestHeaders,
     //     data: requestBody
     // });
-    const response = await request.post(usersEndpoint,{
+    const response = await request.post(usersEndpoint, {
         data: requestBody,
     });
     return response;
