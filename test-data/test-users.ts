@@ -1,6 +1,12 @@
 export default {
-    "valid_email" : "Test_Flairstech@gmail.com",
-    "valid_password" : "P@ssw0rd",
-    "invalid_email" : "invalid@gmail.com",
-    "invalid_password" : "invalidP@ss",
+    "credentials": {
+        "valid": {
+            "email": "Test_Flairstech@gmail.com",
+            "password": "P@ssw0rd"
+        },
+        "invalid": {
+            "email": "invalid@gmail.com",
+            "password": "invalidP@ss",
+        },
+    }
 }
