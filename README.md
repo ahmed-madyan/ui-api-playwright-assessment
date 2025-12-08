@@ -1,194 +1,98 @@
 # Falirstech Playwright Assessment
 
-Comprehensive Playwright test automation repository containing API and UI tests, Playwright configuration, and reporting integration (Allure + HTML).
+Playwright test automation framework with API and UI tests, plus Allure and HTML reporting.
 
-**Quick summary:** This repository uses `@playwright/test` to run tests located in the `tests/` folder and produces HTML and Allure test reports.
+## Getting Started
 
-**Table of Contents**
-- [Prerequisites](#prerequisites)
-- [Getting started](#getting-started)
-- [Common commands](#common-commands)
-- [Running tests (examples)](#running-tests-examples)
-- [Reports](#reports)
-- [Configuration & environment](#configuration--environment)
-- [Repository structure](#repository-structure)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [Contact](#contact)
-
-## Prerequisites
-
-- Node.js (LTS recommended)
-- npm (bundled with Node) or yarn
-- Playwright browsers (installed via Playwright CLI)
-- (Optional) Allure commandline to view Allure reports locally
-
-On Windows PowerShell, ensure you run commands from the project root.
-
-## Getting started
-
-1. Clone the repo:
+Clone the repository:
 
 ```powershell
-git clone <[repo-url](https://github.com/ahmed-madyan/falirstech-playwright-assessment)>
+git clone https://github.com/ahmed-madyan/falirstech-playwright-assessment
 cd falirstech-playwright-assessment
 ```
 
-2. Install dependencies:
+Install dependencies and browsers:
 
 ```powershell
 npm install
-```
-
-3. Install Playwright browsers (if not already installed):
-
-```powershell
 npx playwright install
 ```
 
-4. (Optional) Install Allure CLI to view Allure reports locally. Two common ways:
-
-Install as dev dependency:
+For Allure reports, install the CLI (optional):
 
 ```powershell
 npm i -D allure-commandline
 ```
 
-Or use npx to call the local binary, or install Allure globally per your OS.
+## Running Tests
 
-## Common commands
+The config has three projects: `chromium`, `firefox`, and `api`. Some npm scripts in `package.json` reference projects that don't exist (`ui`, `debug`), so they won't work.
 
-The repository includes npm scripts in `package.json`. **Note:** Some scripts reference project names that don't exist in `playwright.config.ts`:
+Working npm scripts:
+- `npm run api` - runs API tests
+- `npm run ft` - runs tests tagged with `@ft`
+- `npm run staging` - runs staging tests with `@ft` tag
 
-- ❌ `npm run ui` — references `--project=ui`, but no `ui` project exists in config
-- ❌ `npm run uim` — references `--project=ui`, but no `ui` project exists in config
-- ❌ `npm run debug` — references `--project=debug`, but no `debug` project exists in config
-- ✅ `npm run api` — runs tests filtered with `@api` tag (works correctly)
-- ✅ `npm run ft` — runs tests filtered with `@ft` tag (works correctly)
-- ✅ `npm run staging` — runs tests with staging environment and `@ft` tag (works correctly)
-- ✅ `npm run lh` — Lighthouse invocation (if configured)
-
-**Available projects in `playwright.config.ts`:**
-- `chromium` — runs UI tests tagged with `@ui` on Chromium
-- `firefox` — runs UI tests tagged with `@ui` on Firefox
-- `api` — runs API tests tagged with `@api`
-
-For reliable test execution, use the examples in the "Running tests (examples)" section below or update the npm scripts to match the actual project names.
-
-## Running tests (examples)
-
-- Run all tests (default):
+Direct Playwright commands (recommended):
 
 ```powershell
+# Run all tests
 npx playwright test
-```
 
-- Run tests for a specific Playwright project (Chromium):
-
-```powershell
+# Run specific project
 npx playwright test --project=chromium
-```
+npx playwright test --project=firefox
+npx playwright test --project=api
 
-- Run tests for a specific file:
-
-```powershell
+# Run specific file
 npx playwright test tests/ui/specs/login.spec.ts
-```
 
-- Run tests that match a grep/tag (for example `@api`):
-
-```powershell
+# Run by tag
 npx playwright test --grep @api
+
+# Debug mode
+npx playwright test tests/ui/specs/login.spec.ts --project=chromium --headed
 ```
 
-- Run a single test in headed mode (useful for debugging):
+## Reports
 
+After running tests, you'll get results in `allure-results/` and `playwright-report/`.
+
+View Allure report:
 ```powershell
-npx playwright test tests/ui/specs/login.spec.ts -p chromium --headed
+npx allure generate ./allure-results -o ./allure-report --clean
+npx allure open ./allure-report
 ```
 
-- Show Playwright HTML report after a run:
-
-```powershell
-npx playwright show-report
-```
-
-## Reports (Allure + Playwright HTML)
-
-This project is configured to use both the HTML reporter and Allure (see `playwright.config.ts` reporter section). After running tests, results are produced under `allure-results/` and an HTML report may be generated in `playwright-report/`.
-
-To generate an Allure report locally (example):
-
-```powershell
-# generate and open report (requires allure-commandline or npx availability)
-npx allure generate ./allure-results -o ./allure-report --clean; npx allure open ./allure-report
-```
-
-If you don't have Allure installed, you can inspect Playwright's HTML report:
-
+View Playwright HTML report:
 ```powershell
 npx playwright show-report
-# or open an existing report directory
-npx playwright show-report ./playwright-report
 ```
 
-## Configuration & environment
+## Configuration
 
-- Base URLs for environments are defined in `tests/utils/urls.ts`:
+Base URLs are in `tests/utils/urls.ts`. The `playwright.config.ts` sets up:
+- Test directory: `./tests`
+- Reporters: HTML and Allure
+- Projects: `api` (filters `@api`), `chromium` and `firefox` (filter `@ui`)
+- Retries: 1
+- Timeouts: 2 minutes per test, 3 hours global
 
-```ts
-// excerpt
-export default {
-  test: { ui: 'https://www.automationexercise.com/', api: 'https://jsonplaceholder.typicode.com' },
-  staging: { ui: 'https://www.automationexercise.com/', api: 'https://jsonplaceholder.typicode.com/staging' }
-}
+## Project Structure
+
 ```
-
-- `playwright.config.ts` highlights:
-  - `testDir` is `./tests`
-  - Reporters: `html` and `allure-playwright`
-  - Projects defined: `api`, `chromium`, `firefox` (each uses grep to filter tests)
-  - `api` project: filters tests with `@api` tag, uses API base URL
-  - `chromium` project: filters tests with `@ui` tag, runs on Chromium browser
-  - `firefox` project: filters tests with `@ui` tag, runs on Firefox browser
-  - Retries: 1 (configured in config file)
-  - Timeouts: 2 minutes per test, 3 hours global timeout
-
-If you need to target a custom environment, update the test runner or add an env loader (for example, via `cross-env` or a `.env` file) and update `baseURL` accordingly.
-
-## Repository structure
-
-- `tests/` – test specs and fixtures
-  - `api/` – API test specs
-  - `ui/` – UI test specs (pages + fixtures)
-- `playwright.config.ts` – Playwright configuration
-- `package.json` – npm scripts and dependencies
-- `allure-results/` – Allure raw output (generated after test runs)
-- `playwright-report/` – Playwright HTML report (generated after runs)
-
-Example important files:
-
-- `tests/ui/specs/login.spec.ts` – UI login tests
-- `tests/ui/pages/login-page.ts` – page object
-- `tests/utils/urls.ts` – environment base URLs
+tests/
+  api/          - API test specs
+  ui/           - UI test specs, pages, fixtures
+  utils/        - Utilities (urls.ts)
+playwright.config.ts
+package.json
+```
 
 ## Troubleshooting
 
-- **Script errors:** If you get "Project 'ui' not found" when running `npm run ui` or `npm run uim`, use `npx playwright test --project=chromium` instead. The `ui` and `debug` projects don't exist in the config.
-- **Browsers missing:** If browsers are missing, run:
+If you see "Project 'ui' not found", use `--project=chromium` instead. The `ui` project doesn't exist in the config.
 
-```powershell
-npx playwright install
-```
+Missing browsers? Run `npx playwright install`.
 
-- **Allure commands fail:** Ensure `allure-commandline` is installed or call via `npx`.
-- **Flaky tests:** Check `playwright.config.ts` for `retries`, `trace`, and `screenshot` settings. Retries are set to 1, and traces are retained on failure.
-
-## Contributing
-
-- Open an issue for proposed changes or submit a PR.
-- Keep Playwright tests focused, use tags (`@api`, `@ui`, `@ft`) and page objects for maintainability.
-
-## Contact
-
-For questions about this repository, reach out to the repository owner or maintainer.
+For Allure issues, make sure `allure-commandline` is installed or use `npx`.
