@@ -30,7 +30,7 @@ On Windows PowerShell, ensure you run commands from the project root.
 1. Clone the repo:
 
 ```powershell
-git clone <repo-url>
+git clone <[repo-url](https://github.com/ahmed-madyan/falirstech-playwright-assessment)>
 cd falirstech-playwright-assessment
 ```
 
