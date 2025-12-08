@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test"; // Import expect, Locator, and Page from Playwright
-import  url  from "../../utils/urls";
+import url from "../../utils/urls";
 
-export class LoginPage{
+export class LoginPage {
     //=====================Locators=====================
     readonly page: Page; // Create a variable for the page
     readonly email_tb: Locator; // Create a variable for the username textbox
@@ -20,17 +20,17 @@ export class LoginPage{
     }
     //=====================Methods======================
     //---------------------Actions----------------------
-    async open(){
+    async navigateToURL() {
         await this.page.goto(this.url); // Open the URL
     }
 
-    async login(username: string, password: string){
+    async login(username: string, password: string) {
         await this.email_tb.fill(username); // Fill in the username textbox
         await this.password_tb.fill(password); // Fill in the password textbox
         await this.login_btn.click(); // Click the login button
     }
     //---------------------Assertions-------------------
-    async assertInvalidLoginMessage(){
+    async assertInvalidLoginMessage() {
         await expect(this.invalidLoginMessage).toBeVisible(); // Verify the invalid login message
     }
 }
