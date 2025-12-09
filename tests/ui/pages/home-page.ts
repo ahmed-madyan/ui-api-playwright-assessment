@@ -29,7 +29,7 @@ export class HomePage {
         await this.sign_up_btn.click()
     }
     async logout() {
-        await this.logout_btn.click();  
+        await this.logout_btn.click();
     }
     //---------------------Assertions-------------------
     async assertLogoutBtn() {
