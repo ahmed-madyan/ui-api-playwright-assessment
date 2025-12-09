@@ -1,24 +1,19 @@
 # Falirstech Playwright Assessment
 
-Playwright test automation framework with API and UI tests, plus Allure and HTML reporting.
+A Playwright test automation framework for API and UI testing with Allure and HTML reporting.
 
-## Getting Started
+## Setup
 
-Clone the repository:
+First, clone the repository and install dependencies:
 
 ```powershell
 git clone https://github.com/ahmed-madyan/falirstech-playwright-assessment
 cd falirstech-playwright-assessment
-```
-
-Install dependencies and browsers:
-
-```powershell
 npm install
 npx playwright install
 ```
 
-For Allure reports, install the CLI (optional):
+If you want to use Allure reports, install the CLI:
 
 ```powershell
 npm i -D allure-commandline
@@ -26,15 +21,14 @@ npm i -D allure-commandline
 
 ## Running Tests
 
-The config has three projects: `chromium`, `firefox`, and `api`. Some npm scripts in `package.json` reference projects that don't exist (`ui`, `debug`), so they won't work.
+You can run tests using npm scripts or directly with Playwright:
 
-Working npm scripts:
-- `npm run api` - runs API tests
-- `npm run ft` - runs tests tagged with `@ft`
-- `npm run staging` - runs staging tests with `@ft` tag
+**Using npm scripts:**
+- `npm run api` - Run API tests
+- `npm run ft` - Run tests tagged with `@ft`
+- `npm run staging` - Run staging tests
 
-Direct Playwright commands (recommended):
-
+**Using Playwright directly:**
 ```powershell
 # Run all tests
 npx playwright test
@@ -44,55 +38,44 @@ npx playwright test --project=chromium
 npx playwright test --project=firefox
 npx playwright test --project=api
 
-# Run specific file
+# Run a specific test file
 npx playwright test tests/ui/specs/login.spec.ts
 
 # Run by tag
 npx playwright test --grep @api
 
-# Debug mode
+# Debug mode (opens browser)
 npx playwright test tests/ui/specs/login.spec.ts --project=chromium --headed
 ```
 
-## Reports
+## Viewing Reports
 
-After running tests, you'll get results in `allure-results/` and `playwright-report/`.
+After running tests, you can view results in two ways:
 
-View Allure report:
+**Allure Report:**
 ```powershell
 npx allure generate ./allure-results -o ./allure-report --clean
 npx allure open ./allure-report
 ```
 
-View Playwright HTML report:
+**Playwright HTML Report:**
 ```powershell
 npx playwright show-report
 ```
-
-## Configuration
-
-Base URLs are in `tests/utils/urls.ts`. The `playwright.config.ts` sets up:
-- Test directory: `./tests`
-- Reporters: HTML and Allure
-- Projects: `api` (filters `@api`), `chromium` and `firefox` (filter `@ui`)
-- Retries: 1
-- Timeouts: 2 minutes per test, 3 hours global
 
 ## Project Structure
 
 ```
 tests/
   api/          - API test specs
-  ui/           - UI test specs, pages, fixtures
+  ui/           - UI test specs, pages, and fixtures
   utils/        - Utilities (urls.ts)
 playwright.config.ts
 package.json
 ```
 
-## Troubleshooting
+## Notes
 
-If you see "Project 'ui' not found", use `--project=chromium` instead. The `ui` project doesn't exist in the config.
-
-Missing browsers? Run `npx playwright install`.
-
-For Allure issues, make sure `allure-commandline` is installed or use `npx`.
+- Base URLs are configured in `tests/utils/urls.ts`
+- The framework includes three projects: `chromium`, `firefox`, and `api`
+- Tests are configured with 1 retry and 2-minute timeout per test
