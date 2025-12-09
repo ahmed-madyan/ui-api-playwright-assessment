@@ -11,5 +11,8 @@ export default {
     "mobile_number": "+1234567890",
     "birth_day": "10",
     "birth_month": "5",
-    "birth_year": "1990"
+    "birth_year": "1990",
+    "title": "Mr",
+    company: "Test Company",
+    address2: "Suite 100"
 }
