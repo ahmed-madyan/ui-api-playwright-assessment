@@ -1,9 +1,9 @@
 export default {
-    test : {
+    test: {
         ui: 'https://www.automationexercise.com/',
         api: 'https://www.automationexercise.com/',
     },
-    staging : {
+    staging: {
         ui: 'https://www.automationexercise.com/',
         api: 'https://www.automationexercise.com/',
     }
