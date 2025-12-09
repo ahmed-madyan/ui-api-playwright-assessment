@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import usersRequest from '../endpoints/users-endpoints';
 import tsData from '../../../test-data/test-users';
-
 //=======================Variables==========================
 let response;
 let jsonResponse;
