@@ -25,8 +25,8 @@ test.describe('Users API Test @api', () => {
         await expect(jsonResponse.responseCode).toBe(200);
         await expect(jsonResponse.message).toEqual('User exists!');
     });
-        //----------------------GET 200---------------
-    test('', async ({ request }) => {
+    //----------------------GET 200---------------
+    test('Validate Get User Details By Email Endpoint', async ({ request }) => {
         response = await usersRequest.getUserDetailsByEmail(request);
         jsonResponse = await response.json();
         console.log(jsonResponse);
