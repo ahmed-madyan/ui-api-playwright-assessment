@@ -35,5 +35,4 @@ export class HomePage {
     async assertLogoutBtn() {
         await expect(this.logout_btn).toBeVisible();
     }
-
 }
