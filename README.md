@@ -1,4 +1,4 @@
-# Falirstech Playwright Assessment
+# UI API Playwright Assessment
 
 A Playwright test automation framework for API and UI testing with Allure and HTML reporting.
 
