@@ -1,74 +1,88 @@
 import { defineConfig, devices } from '@playwright/test';
 import baseEnvUrl from './tests/utils/urls';
+
 /**
- * Read environment variables from file.
+ * Playwright Test Configuration
+ * Configures test execution settings, reporters, timeouts, and browser projects
+ * 
+ * Note: To use environment variables, install dotenv package:
  * https://github.com/motdotla/dotenv
  */
 export default defineConfig({
   testDir: './tests',
+  
   /* Run tests in files in parallel */
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  
+  /* Fail the build on CI if you accidentally left test.only in the source code */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  // retries: process.env.CI ? 2 : 0,
+  
+  /* Retry failed tests once (can be configured per CI environment) */
   retries: 1,
-  /* Opt out of parallel tests on CI. */
-  // workers: process.env.CI ? 2 : 1,
+  
+  /* Number of parallel workers for test execution */
   workers: 4,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-
+  
+  /* Reporters configuration */
   reporter: [
     ['html', { open: 'never' }],
     ["allure-playwright"],
   ],
+  
+  /* Expect assertions timeout: 6 seconds for validation checks */
   expect: {
-    timeout: 6000, //timeout for validation
+    timeout: 6000,
   },
-  timeout: 2*60*1000, //General timeout for the test run is 1min
-  globalTimeout: 3*60*60*1000, //General timeout for the total run is 3hr
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  
+  /* Test timeout: 2 minutes per test */
+  timeout: 2 * 60 * 1000,
+  
+  /* Global timeout: 3 hours for entire test suite execution */
+  globalTimeout: 3 * 60 * 60 * 1000,
+  
+  /* Shared settings for all projects */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace:'retain-on-failure',
+    /* Collect trace only when test fails for debugging */
+    trace: 'retain-on-failure',
+    
+    /* Take screenshot on failure */
     screenshot: 'on',
+    
+    /* Run browsers in headless mode */
     headless: true,
-    // actionTimeout:6000, 
-    // navigationTimeout:30000,
-    baseURL: baseEnvUrl.test.ui 
+    
+    /* Base URL for UI tests */
+    baseURL: baseEnvUrl.test.ui
   },
 
-  /* Configure projects for major browsers */
+  /* Configure test projects for different browsers and API tests */
   projects: [
     {
       name: 'api',
       grep: /@api/,
       use: {
         baseURL: baseEnvUrl.test.api,
-        trace:'on'
-       },
+        trace: 'on'
+      },
     },
-    
 
     {
       name: 'chromium',
       grep: /@ui/,
-      use: { ...devices['Desktop Chrome'],
+      use: {
+        ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 920 },
-        trace:'retain-on-failure',
-       },
+        trace: 'retain-on-failure',
+      },
     },
 
     {
       name: 'firefox',
       grep: /@ui/,
-      use: { ...devices['Desktop Firefox'],
+      use: {
+        ...devices['Desktop Firefox'],
         video: 'retain-on-failure',
       },
     },
-
   ],
 });

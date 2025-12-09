@@ -1,16 +1,24 @@
 import url from "../../utils/urls";
 import signUpData from '../../../test-data/sign_up';
 import usersData from '../../../test-data/test-users';
-//=======================Variables=============================
-let email: string;
-//==========================Endpoints==========================
+
+/**
+ * API Endpoints Configuration
+ * Defines base URL and endpoint paths for user-related API operations
+ */
 const baseUrl = url.test.api;
 const createAccountEndpoint = 'api/createAccount';
 const verifyLoginEndpoint = 'api/verifyLogin';
 const getUserDetailsByEmailEndpoint = 'api/getUserDetailByEmail';
-//==========================Requests Objects===================
+
+/**
+ * Request Payloads and Headers
+ * Prepares data for API requests including dynamically generated email
+ */
+let email: string;
 const randomNumber: number = Math.random();
 email = ("test" + randomNumber + "@gmail.com");
+
 const createAccount_requestPayload = {
     name: (signUpData.name + randomNumber),
     email: email,
@@ -30,47 +38,61 @@ const createAccount_requestPayload = {
     city: signUpData.city,
     mobile_number: signUpData.mobile_number
 };
+
 const verifyLogin_Param = {
     email: usersData.credentials.valid.email,
     password: usersData.credentials.valid.password
 };
+
 const requestHeaders = {
     "Content-Type": "application/x-www-form-urlencoded"
 };
+
 const getUserDetailByEmail_Param = {
     email: usersData.credentials.valid.email
 };
-//==========================Requests===========================
-//--------------------------post 201---------------------------
-async function createUser(request: any) {
 
+/**
+ * API Request Functions
+ * Functions to interact with user-related API endpoints
+ */
+
+/**
+ * Creates a new user account
+ * @param request - Playwright API request context
+ * @returns Promise<Response> - API response with status code 201 on success
+ */
+async function createUser(request: any) {
     const response = await request.post(createAccountEndpoint, {
         form: createAccount_requestPayload,
         Headers: requestHeaders
     });
     return response;
 }
-//-----------------------Get with param 200--------------------
+
+/**
+ * Verifies user login credentials
+ * @param request - Playwright API request context
+ * @returns Promise<Response> - API response with status code 200 on success
+ */
 async function verifyLogin(request: any) {
-    // const response = await request.get(baseUrl+usersEndpoint,{
-    //     params: userParam
-    // });
     const response = await request.post(verifyLoginEndpoint, {
         form: verifyLogin_Param,
         Headers: requestHeaders
-        // params: verifyLogin_Param
     });
     return response;
 }
-//-----------------------Get with param 200--------------------
+
+/**
+ * Retrieves user details by email address
+ * @param request - Playwright API request context
+ * @returns Promise<Response> - API response with status code 200 and user details
+ */
 async function getUserDetailsByEmail(request: any) {
-    // const response = await request.get(baseUrl+usersEndpoint,{
-    //     params: userParam
-    // });
     const response = await request.get(getUserDetailsByEmailEndpoint, {
         params: getUserDetailByEmail_Param
     });
     return response;
 }
-//==========================Exports============================
+
 export default { verifyLogin, createUser, getUserDetailsByEmail };

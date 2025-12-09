@@ -3,6 +3,10 @@ import { LoginPage } from '../pages/login-page';
 import { HomePage } from '../pages/home-page';
 import { SignUp } from '../pages/signUp-page';
 
+/**
+ * Custom Fixtures for Sign-Up Tests
+ * Extends Playwright's base test with page object instances for sign-up and login tests
+ */
 type myFixtures = {
     loginPage: LoginPage;
     homePage: HomePage;
