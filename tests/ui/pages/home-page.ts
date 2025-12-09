@@ -28,6 +28,9 @@ export class HomePage {
         await this.email_tb.fill(email)
         await this.sign_up_btn.click()
     }
+    async logout() {
+        await this.logout_btn.click();  
+    }
     //---------------------Assertions-------------------
     async assertLogoutBtn() {
         await expect(this.logout_btn).toBeVisible();
